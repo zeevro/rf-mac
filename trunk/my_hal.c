@@ -26,7 +26,7 @@ void init_pic() {
     OSCCON = 0x73; // 8 MHz
     OSCTUNEbits.PLLEN = 0; // No PLL
 
-    TRISB = 0x01;
+    TRISB = 0b00011001;
 
     delay_ms(500);
 

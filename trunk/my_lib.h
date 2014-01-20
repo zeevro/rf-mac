@@ -14,6 +14,7 @@ typedef unsigned short uint16_t;
 #include <string.h>
 
 #include "hal_nrf.h"
+#include "queue.h"
 #include "protocol.h"
 
 #define CSN PORTBbits.RB2  // CSN PIN for BFB
