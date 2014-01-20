@@ -1,9 +1,15 @@
 #ifndef PROTOCOL_H
 #define	PROTOCOL_H
 
-#define ROUTE_TABLE_SIZE 32
-
 #define NODE_ADDRESS 2
+
+#define NUM_OLD_MSGS 16
+
+#define MESSAGE_SIGNATURE 0x90
+
+#define HEADER_SIZE (sizeof(uint8_t) * 3 + sizeof(node_address_t) * 4)
+
+#define MAX_PAYLOAD_SIZE (32 - HEADER_SIZE)
 
 typedef uint8_t node_address_t;
 
@@ -20,18 +26,16 @@ typedef struct {
     node_address_t src;
     node_address_t dst;
     uint8_t hops;
-    char payload[];
+    char payload[MAX_PAYLOAD_SIZE];
 } message_t;
 
-#define MESSAGE_SIGNATURE 0x90
+uint16_t fqid(const message_t * m);
 
-#define HEADER_SIZE (sizeof(uint8_t) * 3 + sizeof(node_address_t) * 4)
+void init_protocol();
 
-uint16_t fqid(message_t * m);
+void rx_handler(const message_t * message, const uint8_t length);
 
-void init_route_table();
-
-void rx_handler(message_t * message, uint8_t length);
+void tx_message(const node_address_t dst, const char * payload, const uint8_t payload_length);
 
 #endif	/* PROTOCOL_H */
 
