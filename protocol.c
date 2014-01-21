@@ -26,7 +26,7 @@ void init_protocol() {
     tx_msg.hops = 0;
 }
 
-void rx_handler(const message_t * message, const uint8_t length) {
+void rx_handler(message_t * message, uint8_t length) {
     route_t * route;
     message_t forward_message;
     uint8_t u_src_id;
@@ -81,7 +81,7 @@ void rx_handler(const message_t * message, const uint8_t length) {
     radio_tx(&forward_message, length);
 }
 
-void tx_message(const node_address_t dst, const char * payload, const uint8_t payload_length) {
+void tx_message(node_address_t dst, char * payload, uint8_t payload_length) {
     tx_msg.id ++;
     tx_msg.u_dst = dst;
     tx_msg.dst = routes[dst - 1].router;

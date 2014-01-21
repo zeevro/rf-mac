@@ -33,9 +33,9 @@ uint16_t fqid(const message_t * m);
 
 void init_protocol();
 
-void rx_handler(const message_t * message, const uint8_t length);
+void rx_handler(message_t * message, uint8_t length);
 
-void tx_message(const node_address_t dst, const char * payload, const uint8_t payload_length);
+void tx_message(node_address_t dst, char * payload, uint8_t payload_length);
 
 #endif	/* PROTOCOL_H */
 

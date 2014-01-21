@@ -6,13 +6,13 @@
 
 #include "my_lib.h"
 
-void delay_us(const unsigned long delay) {
+void delay_us(unsigned long delay) {
     // 8MHz clock
     unsigned long x = delay / 6;
     while(--x > 0);
 }
 
-void delay_ms(const unsigned long delay) {
+void delay_ms(unsigned long delay) {
     // 8MHz clock
     unsigned long i = 150, j = delay;
     while (--i > 0)
@@ -51,22 +51,7 @@ uint8_t hal_nrf_rw(uint8_t value) {
     return SSPBUF;
 }
 
-void xfer(uint8_t recv[], const uint8_t send[], const uint8_t length) {
-    int i;
-
-    CSN = 0;
-
-    for (i = 0; i < length; i++)
-    {
-        WriteSPI(send[i]);
-        while (!DataRdySPI());
-        recv[i] = SSPBUF;
-    }
-
-    CSN = 1;
-}
-
-void radio_esb_init(const uint8_t * address) {
+void radio_esb_init(uint8_t * address) {
   delay_ms(100);
   hal_nrf_close_pipe(HAL_NRF_ALL);                        // First close all radio pipes (0 and 1 are open by default)
   hal_nrf_open_pipe(HAL_NRF_PIPE0, false);                // Then open pipe0, w/o autoack
@@ -89,7 +74,7 @@ uint8_t wait_for_irq() {
     return hal_nrf_get_clear_irq_flags();
 }
 
-bool radio_tx(const message_t * message, const uint8_t length) {
+bool radio_tx(message_t * message, uint8_t length) {
     uint8_t tx_ret;
     bool success;
 
