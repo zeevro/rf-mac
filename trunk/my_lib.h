@@ -29,11 +29,9 @@ typedef unsigned short uint16_t;
 #define LED_ON  1
 #define LED_OFF 0
 
-#define MAX_PAYLOAD_LENGTH 5
+void delay_us(unsigned long delay);
 
-void delay_us(const unsigned long delay);
-
-void delay_ms(const unsigned long delay);
+void delay_ms(unsigned long delay);
 
 void init_pic();
 
@@ -43,12 +41,12 @@ void test_led();
 
 uint8_t hal_nrf_rw(uint8_t value);
 
-void xfer(uint8_t recv[], const uint8_t send[], const uint8_t length);
+void xfer(uint8_t recv[], uint8_t send[], uint8_t length);
 
-void radio_esb_init(const uint8_t * address);
+void radio_esb_init(uint8_t * address);
 
 uint8_t wait_for_irq();
 
-bool radio_tx(const message_t * message, const uint8_t length);
+bool radio_tx(message_t * message, uint8_t length);
 
 #endif // _MY_LIB_H
