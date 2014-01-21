@@ -85,7 +85,7 @@ void tx_message(const node_address_t dst, const char * payload, const uint8_t pa
     tx_msg.id ++;
     tx_msg.u_dst = dst;
     tx_msg.dst = routes[dst - 1].router;
-    *(tx_msg.payload) = payload;
+    memcpy(&(tx_msg.payload), payload, payload_length);
 
     radio_tx(&tx_msg, HEADER_SIZE + payload_length);
 }
