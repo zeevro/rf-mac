@@ -1,14 +1,13 @@
-#ifndef QUEUE_H
-#define	QUEUE_H
+#ifndef _QUEUE_H
+#define _QUEUE_H
 
 typedef struct {
-    uint8_t size;
-    uint8_t head;
-    uint16_t * array;
+    UINT8 size;
+    UINT8 head;
+    UINT16 * array;
 } queue_t;
 
-void queue_init(queue_t * q, uint16_t * array, uint8_t size);
+void queue_init(queue_t * q, UINT16 * array, UINT8 size);
+void queue_push(queue_t * q, UINT16 value);
 
-void queue_push(queue_t * q, uint16_t value);
-
-#endif	/* QUEUE_H */
+#endif /* _QUEUE_H */

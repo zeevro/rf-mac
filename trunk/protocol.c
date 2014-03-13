@@ -1,53 +1,65 @@
-#include "my_lib.h"
+#include "main.h"
 
-route_t routes[0x100];
-uint16_t old_msgs_fqids[NUM_OLD_MSGS];
+route_t routes[0xFF];
+UINT16 old_msgs_fqids[NUM_OLD_MSGS];
 queue_t old_msgs;
 message_t tx_msg;
+node_address_t node_address;
 
-uint16_t fqid(const message_t * m) {
+UINT16 fqid(message_t * m) {
     return (m->id << 8) | m->u_src;
 }
 
-void init_protocol() {
-    uint16_t i;
-    for (i = 0; i < 0x100; i++)
+void set_null_route(route_t * route) {
+    route->router = 0;
+    route->distance = 0xFF;
+}
+
+void init_protocol(node_address_t address) {
+    UINT8 i = 0;
+
+    node_address = address;
+
+    do
     {
-        routes[i].router = 0;
-        routes[i].distance = 0xFF;
+        set_null_route(&(routes[i++]));
     }
+    while (i != 0);
+
+    memset(old_msgs_fqids, 0, sizeof (old_msgs_fqids));
 
     queue_init(&old_msgs, old_msgs_fqids, NUM_OLD_MSGS);
 
     tx_msg.signature = MESSAGE_SIGNATURE;
     tx_msg.id = 0;
-    tx_msg.u_src = NODE_ADDRESS;
-    tx_msg.src = NODE_ADDRESS;
+    tx_msg.u_src = node_address;
+    tx_msg.src = node_address;
     tx_msg.hops = 0;
 }
 
-void rx_handler(message_t * message, uint8_t length) {
-    route_t * route;
+void rx_handler(message_t * message, UINT8 length) {
+    route_t * src_route;
+    route_t * dst_route;
     message_t forward_message;
-    uint8_t u_src_id;
-    uint16_t m_fqid;
-    uint8_t i;
+    UINT8 u_src_id;
+    UINT16 m_fqid;
+    UINT8 i;
 
     if (message->signature != MESSAGE_SIGNATURE) return;
 
-    if (message->u_src == NODE_ADDRESS) return;
+    if (message->u_src == node_address) return;
 
     u_src_id = message->u_src - 1;
 
-    route = &(routes[u_src_id]);
+    src_route = &(routes[u_src_id]);
 
-    if (route->distance > message->hops)
+    if (src_route->distance > message->hops)
     {
-        route->router = message->src;
-        route->distance = message->hops;
+        src_route->router = message->src;
+        src_route->distance = message->hops;
     }
 
-    if (message->dst != 0 && message->dst != NODE_ADDRESS) return;
+    if (message->dst != 0 && message->dst != node_address) return;
 
     m_fqid = fqid(message);
     for (i = 0; i < NUM_OLD_MSGS; i++)
@@ -57,35 +69,45 @@ void rx_handler(message_t * message, uint8_t length) {
 
     queue_push(&old_msgs, m_fqid);
 
-    if (message->u_dst == NODE_ADDRESS)
+    if (message->u_dst == node_address)
     {
         // TODO: Handle payload
         // payload_length = length - HEADER_SIZE;
-        LED = LED_ON;
+        LED = 1;
         delay_ms(800);
-        LED = LED_OFF;
+        LED = 0;
 
         return;
     }
 
     memcpy((void *)(&forward_message), (void *)message, length);
 
-    forward_message.src = NODE_ADDRESS;
-    forward_message.dst = routes[message->u_dst - 1].router;
-    forward_message.hops ++;
+    dst_route = &(routes[message->u_dst - 1]);
 
-    LED = LED_ON;
+    if (message->new_route)
+    {
+        set_null_route(dst_route);
+    }
+
+    forward_message.src = node_address;
+    forward_message.dst = dst_route->router;
+    forward_message.hops++;
+
+    LED = 1;
     delay_ms(200);
-    LED = LED_OFF;
+    LED = 0;
 
-    radio_tx(&forward_message, length);
+    radio_tx((UINT8 *)(&forward_message), length);
 }
 
-void tx_message(node_address_t dst, char * payload, uint8_t payload_length) {
-    tx_msg.id ++;
+void tx_message(node_address_t dst, UINT8 * payload, UINT8 payload_length, BOOL new_route) {
+    tx_msg.new_route = new_route;
+    tx_msg.id++;
     tx_msg.u_dst = dst;
     tx_msg.dst = routes[dst - 1].router;
     memcpy(&(tx_msg.payload), payload, payload_length);
 
-    radio_tx(&tx_msg, HEADER_SIZE + payload_length);
+    radio_tx((UINT8 *)(&tx_msg), HEADER_SIZE + payload_length);
+
+    // TODD: Init timer for retransmit
 }

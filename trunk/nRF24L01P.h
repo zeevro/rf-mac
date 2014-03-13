@@ -1,39 +1,21 @@
-/* Copyright (c) 2006 Nordic Semiconductor. All Rights Reserved.
- *
- * The information contained herein is confidential property of Nordic Semiconductor. The use,
- * copying, transfer or disclosure of such information is prohibited except by express written
- * agreement with Nordic Semiconductor.
- *
- * $Rev: 1731 $
- *
- */
-
-/** @file
- * Register definitions for the nRF HAL module
- * @defgroup nordic_hal_nrf_reg nRF24L01 Register definitions
- * @{
- * @ingroup nordic_hal_nrf
- * Header file defining register mapping with bit definitions.\ This file is radio-chip dependent, and are included with the hal_nrf.h
- */
-
-#ifndef HAL_NRF_REG_H__
-#define HAL_NRF_REG_H__
+#ifndef _NRF24L01P_H
+#define _NRF24L01P_H
 
 /** @name - Instruction Set - */
 //@{
 /* nRF24L01 Instruction Definitions */
-#define WRITE_REG     0x20  /**< Register write command */
-#define RD_RX_PLOAD_W   0x60  /**< Read RX payload command */
-#define RD_RX_PLOAD   0x61  /**< Read RX payload command */
-#define WR_TX_PLOAD   0xA0  /**< Write TX payload command */
-#define WR_ACK_PLOAD  0xA8  /**< Write ACK payload command */
-#define WR_NAC_TX_PLOAD 0xB0  /**< Write ACK payload command */
-#define FLUSH_TX      0xE1  /**< Flush TX register command */
-#define FLUSH_RX      0xE2  /**< Flush RX register command */
-#define REUSE_TX_PL   0xE3  /**< Reuse TX payload command */
-#define LOCK_UNLOCK   0x50  /**< Lock/unlcok exclusive features */
+#define WRITE_REG        0x20  /**< Register write command */
+#define RD_RX_PLOAD_W    0x60  /**< Read RX payload command */
+#define RD_RX_PLOAD      0x61  /**< Read RX payload command */
+#define WR_TX_PLOAD      0xA0  /**< Write TX payload command */
+#define WR_ACK_PLOAD     0xA8  /**< Write ACK payload command */
+#define WR_NAC_TX_PLOAD  0xB0  /**< Write ACK payload command */
+#define FLUSH_TX         0xE1  /**< Flush TX register command */
+#define FLUSH_RX         0xE2  /**< Flush RX register command */
+#define REUSE_TX_PL      0xE3  /**< Reuse TX payload command */
+#define LOCK_UNLOCK      0x50  /**< Lock/unlcok exclusive features */
 
-#define RFNOP         0xFF  /**< No Operation command, used for reading status register */
+#define RFNOP            0xFF  /**< No Operation command, used for reading status register */
 //@}
 
 /** @name  - Register Memory Map - */
@@ -46,7 +28,7 @@
 #define SETUP_RETR    0x04  /**< nRF24L01 setup of automatic retransmission register */
 #define RF_CH         0x05  /**< nRF24L01 RF channel register */
 #define RF_SETUP      0x06  /**< nRF24L01 RF setup register */
-#define NRF_STATUS        0x07  /**< nRF24L01 status register */
+#define NRF_STATUS    0x07  /**< nRF24L01 status register */
 #define OBSERVE_TX    0x08  /**< nRF24L01 transmit observe register */
 #define CD            0x09  /**< nRF24L01 carrier detect register */
 #define RX_ADDR_P0    0x0A  /**< nRF24L01 receive address data pipe0 */
@@ -150,25 +132,6 @@ typedef enum {
     HAL_NRF_ACK_PLOAD
 } hal_nrf_pload_command_t;
 
-/** Structure containing the radio's address map.
- * Pipe0 contains 5 unique address bytes,
- * while pipe[1..5] share the 4 MSB bytes, set in pipe1.
- * <p><b> - Remember that the LSB byte for all pipes have to be unique! -</b>
- */
-// nRF24L01 Address struct
-
-/*
-//typedef struct {
-//   uint8_t p0[5];            /**< Pipe0 address, 5 bytes */
-//    uint8_t p1[5];            /**< Pipe1 address, 5 bytes, 4 MSB bytes shared for pipe1 to pipe5 */
-//    uint8_t p2[1];            /**< Pipe2 address, 1 byte */
-//    uint8_t p3[1];            /**< Pipe3 address, 1 byte */
- //   uint8_t p4[1];            /**< Pipe3 address, 1 byte */
- //   uint8_t p5[1];            /**< Pipe3 address, 1 byte */
- //   uint8_t tx[5];            /**< TX address, 5 byte */
-//} hal_nrf_l01_addr_map;
-
-
 /** An enum describing the nRF24L01 pipe addresses and TX address.
  *
  */
@@ -235,5 +198,70 @@ typedef enum {
 #define RX_EMPTY      0     /**< FIFO_STATUS register bit 0 */
 //@}
 
-#endif // HAL_NRF_REG_H__
+void hal_nrf_set_irq_mode(hal_nrf_irq_source_t int_source, BOOL irq_state);
+UINT8 hal_nrf_get_clear_irq_flags();
+void hal_nrf_clear_irq_flag(hal_nrf_irq_source_t int_source);
+BOOL hal_nrf_get_irq_mode(UINT8 int_type);
+UINT8 hal_nrf_get_irq_flags();
+void hal_nrf_set_crc_mode(hal_nrf_crc_mode_t crc_mode);
+void hal_nrf_open_pipe(hal_nrf_address_t pipe_num, BOOL auto_ack);
+void hal_nrf_close_pipe(hal_nrf_address_t pipe_num);
+void hal_nrf_set_address(hal_nrf_address_t address, UINT8 * addr);
+void hal_nrf_set_auto_retr(UINT8 retr, UINT16 delay);
+void hal_nrf_set_address_width(hal_nrf_address_width_t address_width);
+void hal_nrf_set_rx_pload_width(UINT8 pipe_num, UINT8 pload_width);
+UINT8 hal_nrf_get_crc_mode();
+UINT8 hal_nrf_get_pipe_status(UINT8 pipe_num);
+UINT8 hal_nrf_get_address(UINT8 address, UINT8 * addr);
+UINT8 hal_nrf_get_auto_retr_status();
+UINT8 hal_nrf_get_packet_lost_ctr();
+UINT8 hal_nrf_get_address_width();
+UINT8 hal_nrf_get_rx_pload_width(UINT8 pipe_num);
+void hal_nrf_set_operation_mode(hal_nrf_operation_mode_t op_mode);
+void hal_nrf_set_power_mode(hal_nrf_pwr_mode_t pwr_mode);
+void hal_nrf_set_rf_channel(UINT8 channel);
+void hal_nrf_set_output_power(hal_nrf_output_power_t power);
+void hal_nrf_set_datarate(hal_nrf_datarate_t datarate);
+UINT8 hal_nrf_get_operation_mode();
+UINT8 hal_nrf_get_power_mode();
+UINT8 hal_nrf_get_rf_channel();
+UINT8 hal_nrf_get_output_power();
+UINT8 hal_nrf_get_datarate();
+BOOL hal_nrf_rx_fifo_empty();
+BOOL hal_nrf_rx_fifo_full();
+BOOL hal_nrf_tx_fifo_empty();
+BOOL hal_nrf_tx_fifo_full();
+UINT8 hal_nrf_get_tx_fifo_status();
+UINT8 hal_nrf_get_rx_fifo_status();
+UINT8 hal_nrf_get_fifo_status();
+UINT8 hal_nrf_get_transmit_attempts();
+BOOL hal_nrf_get_carrier_detect();
+void hal_nrf_write_tx_pload(UINT8 *tx_pload, UINT8 length);
+void hal_nrf_setup_dyn_pl(UINT8 setup);
+void hal_nrf_enable_dynamic_pl();
+void hal_nrf_disable_dynamic_pl();
+void hal_nrf_enable_ack_pl();
+void hal_nrf_disable_ack_pl();
+void hal_nrf_enable_dynamic_ack();
+void hal_nrf_disable_dynamic_ack();
+void hal_nrf_write_ack_pload(UINT8 pipe, UINT8 *tx_pload, UINT8 length);
+UINT8 hal_nrf_read_rx_pl_w();
+void hal_nrf_lock_unlock();
+UINT8 hal_nrf_get_rx_data_source();
+UINT16 hal_nrf_read_rx_pload(UINT8 *rx_pload);
+void hal_nrf_reuse_tx();
+BOOL hal_nrf_get_reuse_tx_status();
+void hal_nrf_flush_rx();
+void hal_nrf_flush_tx();
+UINT8 hal_nrf_nop();
+void hal_nrf_set_pll_mode(hal_nrf_pll_mode_t pll_mode);
+hal_nrf_pll_mode_t hal_nrf_get_pll_mode();
+void hal_nrf_set_lna_gain(hal_nrf_lna_mode_t lna_gain);
+hal_nrf_lna_mode_t hal_nrf_get_lna_gain();
+UINT8 hal_nrf_read_reg(UINT8 reg);
+UINT8 hal_nrf_write_reg(UINT8 reg, UINT8 value);
+UINT16 hal_nrf_read_multibyte_reg(UINT8 reg, UINT8 pbuf[]);
+void hal_nrf_write_multibyte_reg(UINT8 reg, UINT8 pbuf[], UINT8 length);
+
+#endif // _NRF24L01P_H
 /** @} */
