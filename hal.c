@@ -26,9 +26,15 @@ void init_pic() {
     OSCCON = 0x73; // 8 MHz
     OSCTUNEbits.PLLEN = 0; // No PLL
 
-    TRISB = 0b00011001;
+    TRISA = 0;
+    TRISB = 0;
+    TRISC = 0;
+    TRISD = 0;
+    TRISE = 0;
 
-    delay_ms(500);
+    EnablePullups();
+
+    TRISB = BIT_0 | BIT_3 | BIT_4;
 
     LED = 0;
     CE = 0;
@@ -41,7 +47,7 @@ void init_spi() {
 
 node_address_t get_address() {
     // TODO: Implement
-    return 2;
+    return 1 + GPIO2;
 }
 
 void test_led() {
@@ -85,7 +91,7 @@ BOOL radio_tx(UINT8 * message, UINT8 length) {
 
     if (length > 32) return FALSE;
 
-    hal_nrf_write_tx_pload((UINT8 *)message, length);
+    hal_nrf_write_tx_pload(message, length);
 
     CE = 0;
     hal_nrf_set_operation_mode(HAL_NRF_PTX);

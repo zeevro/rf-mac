@@ -3,7 +3,8 @@
 
 #include <GenericTypeDefs.h>
 #include <xc.h>
-#include <plib.h>
+#include <plib/spi.h>
+#include <plib/portb.h>
 #include <string.h>
 
 #include "queue.h"
