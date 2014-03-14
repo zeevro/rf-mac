@@ -1,14 +1,14 @@
 #ifndef _HAL_H
 #define _HAL_H
 
-#define CSN PORTBbits.RB2
-#define CE  PORTBbits.RB1
-#define IRQ PORTBbits.RB0
+#define CSN PORTBbits.RB2 // Out
+#define CE  PORTBbits.RB1 // Out
+#define IRQ PORTBbits.RB0 // In
 
-#define GPIO1 PORTBbits.RB3
-#define GPIO2 PORTBbits.RB4
+#define GPIO1 PORTBbits.RB3 // In
+#define GPIO2 PORTBbits.RB4 // In
 
-#define LED PORTBbits.RB5
+#define LED PORTBbits.RB5 // Out
 
 #define SYS_FREQ 8000
 

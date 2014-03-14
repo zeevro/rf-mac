@@ -32,14 +32,13 @@ void main() {
             }
         }
 
-        if (GPIO1 == 1)
+        if (GPIO1 == 0)
         {
-            tx_message(3, "Hello", 5, FALSE);
-        }
-
-        if (GPIO2 == 1)
-        {
-            tx_message(3, "Bye", 3, FALSE);
+            LED = 1;
+            tx_message(2, "Hello", 5, TRUE);
+            delay_ms(200);
+            LED = 0;
+            while (GPIO1 == 0);
         }
     }
 }
