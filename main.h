@@ -5,10 +5,12 @@
 #include <xc.h>
 #include <plib/spi.h>
 #include <plib/portb.h>
+#include <plib/usart.h>
 #include <string.h>
 
-#include "queue.h"
+#include "message_ids_queue.h"
 #include "protocol.h"
+#include "tx_queue.h"
 #include "hal.h"
 #include "nRF24L01P.h"
 

@@ -2,6 +2,7 @@
 #define _PROTOCOL_H
 
 #define NUM_OLD_MSGS 32
+#define TX_QUEUE_SIZE 4
 
 #define MESSAGE_SIGNATURE 0x90
 
