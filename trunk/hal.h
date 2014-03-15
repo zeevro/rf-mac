@@ -10,6 +10,8 @@
 
 #define LED PORTBbits.RB5 // Out
 
+#define TRIS (BIT_0 | BIT_3 | BIT_4)
+
 #define SYS_FREQ 8000
 
 void delay_us(UINT32 delay);

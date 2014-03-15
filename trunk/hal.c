@@ -32,12 +32,16 @@ void init_pic() {
     TRISD = 0;
     TRISE = 0;
 
-    EnablePullups();
-
-    TRISB = BIT_0 | BIT_3 | BIT_4;
+    TRISB = TRIS;
 
     LED = 0;
     CE = 0;
+
+    OpenPORTB(PORTB_CHANGE_INT_ON & PORTB_PULLUPS_ON);
+    OpenRB0INT(PORTB_CHANGE_INT_ON & FALLING_EDGE_INT & PORTB_PULLUPS_ON);
+
+    INTCONbits.GIE = 1;
+    INTCONbits.GIEL = 1;
 }
 
 void init_spi() {
@@ -47,7 +51,7 @@ void init_spi() {
 
 node_address_t get_address() {
     // TODO: Implement
-    return 1 + GPIO2;
+    return 1 + GPIO1;
 }
 
 void test_led() {
@@ -96,9 +100,11 @@ BOOL radio_tx(UINT8 * message, UINT8 length) {
     CE = 0;
     hal_nrf_set_operation_mode(HAL_NRF_PTX);
 
+    INTCONbits.INT0IE = 0;
     CE = 1;
     delay_us(10);
     CE = 0;
+    INTCONbits.INT0IE = 1;
 
     tx_ret = wait_for_irq();
     success = (tx_ret & (1 << HAL_NRF_TX_DS)) >> HAL_NRF_TX_DS;
