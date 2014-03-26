@@ -44,7 +44,7 @@ void interrupt isr() {
         if (PORTBbits.RB4 == 0)
         {
             LED = 1;
-            tx_message(2, "Hello", 5, TRUE);
+            tx_message(2, (UINT8 *)"Hello", 5, TRUE);
             delay_ms(100);
             LED = 0;
         }
