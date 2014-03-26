@@ -104,6 +104,7 @@ BOOL radio_tx(UINT8 * message, UINT8 length) {
     CE = 1;
     delay_us(10);
     CE = 0;
+    INTCONbits.INT0IF = 0;
     INTCONbits.INT0IE = 1;
 
     tx_ret = wait_for_irq();

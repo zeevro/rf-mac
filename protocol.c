@@ -77,10 +77,13 @@ void rx_handler(message_t * message, UINT8 length) {
 
     if (message->u_dst == node_address)
     {
-        delay_ms(50);
-        tx_message(message->u_src, "Hi", 2, FALSE);
+        if (message->u_src == 1)
+        {
+            delay_ms(50);
+            tx_message(message->u_src, (UINT8 *)"Hi", 2, FALSE);
+        }
 
-        /*
+        //*
         // TODO: Handle payload
         // payload_length = length - HEADER_SIZE;
         LED = 1;
