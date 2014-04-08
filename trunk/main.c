@@ -51,6 +51,8 @@ void main() {
             }
             INTCONbits.RBIF = 0;
         }
+
+        handle_tx_queue();
     }
 }
 
