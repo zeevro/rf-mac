@@ -18,7 +18,7 @@ void tx_queue_push(tx_queue_t * q, tx_message_t * msg) {
     q->count ++;
 }
 
-tx_message_t * tx_queue_pop(tx_queue_t * q){
+tx_message_t * tx_queue_pop(tx_queue_t * q) {
     if (q->count <= 0)
     {
         return NULL;

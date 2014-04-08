@@ -125,3 +125,13 @@ void tx_message(node_address_t dst, UINT8 * payload, UINT8 payload_length, BOOL 
 
     // TODD: Init timer for retransmit
 }
+
+void handle_tx_queue() {
+    tx_message_t * t_tx_message;
+
+    while (tx_queue.count > 0)
+    {
+        t_tx_message = tx_queue_pop(&tx_queue);
+        tx_message(t_tx_message->dst, t_tx_message->payload, t_tx_message->size, FALSE);
+    }
+}

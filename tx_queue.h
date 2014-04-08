@@ -2,9 +2,10 @@
 #define _TX_QUEUE_H
 
 typedef struct {
-    message_t msg;
-    UINT8 size;
     BOOL needs_ack;
+    node_address_t dst;
+    UINT8 size;
+    UINT8 payload[MAX_PAYLOAD_SIZE];
 } tx_message_t;
 
 typedef struct {

@@ -28,12 +28,13 @@ typedef struct {
     node_address_t src;
     node_address_t dst;
     UINT8 hops;
-    char payload[MAX_PAYLOAD_SIZE];
+    UINT8 payload[MAX_PAYLOAD_SIZE];
 } message_t;
 
 UINT16 fqid(message_t * m);
 void init_protocol(node_address_t address);
 void rx_handler(message_t * message, UINT8 length);
 void tx_message(node_address_t dst, UINT8 * payload, UINT8 payload_length, BOOL new_route);
+void handle_tx_queue();
 
 #endif /* _PROTOCOL_H */
