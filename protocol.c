@@ -86,9 +86,9 @@ void rx_handler(message_t * message, UINT8 length) {
         //*
         // TODO: Handle payload
         // payload_length = length - HEADER_SIZE;
-        LED = 1;
+        LED2 = 1;
         delay_ms(800);
-        LED = 0;
+        LED2 = 0;
         // */
 
         return;
@@ -107,9 +107,9 @@ void rx_handler(message_t * message, UINT8 length) {
     forward_message.dst = dst_route->router;
     forward_message.hops++;
 
-    LED = 1;
+    LED1 = 1;
     delay_ms(200);
-    LED = 0;
+    LED1 = 0;
 
     radio_tx((UINT8 *)(&forward_message), length);
 }
