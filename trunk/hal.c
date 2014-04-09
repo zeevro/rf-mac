@@ -1,7 +1,7 @@
 #pragma config OSC = INTIO67
 #pragma config WDT = OFF
 #pragma config PBADEN = OFF
-#pragma config MCLRE = OFF
+//#pragma config MCLRE = OFF
 #pragma config LVP = OFF
 
 #include "main.h"
@@ -34,11 +34,13 @@ void init_pic() {
 
     TRISB = TRIS;
 
-    LED = 0;
+    LED1 = 0;
+    LED2 = 0;
     CE = 0;
 
-    OpenPORTB(PORTB_CHANGE_INT_ON & PORTB_PULLUPS_ON);
     OpenRB0INT(PORTB_CHANGE_INT_ON & FALLING_EDGE_INT & PORTB_PULLUPS_ON);
+    OpenRB1INT(PORTB_CHANGE_INT_ON & FALLING_EDGE_INT & PORTB_PULLUPS_ON);
+    OpenRB2INT(PORTB_CHANGE_INT_ON & FALLING_EDGE_INT & PORTB_PULLUPS_ON);
 
     INTCONbits.GIE = 1;
     INTCONbits.GIEL = 1;
@@ -50,14 +52,15 @@ void init_spi() {
 }
 
 node_address_t get_address() {
-    // TODO: Implement
-    return 1 + GPIO1;
+    return (((~PORTB) >> 3) & 7) + 1;
 }
 
-void test_led() {
-    LED = 1;
+void test_leds() {
+    LED1 = 1;
+    LED2 = 1;
     delay_ms(800);
-    LED = 0;
+    LED1 = 0;
+    LED2 = 0;
 }
 
 UINT8 spi_rw(UINT8 value) {
