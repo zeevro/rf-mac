@@ -32,6 +32,8 @@ typedef struct {
 } message_t;
 
 UINT16 fqid(message_t * m);
+void set_null_route(route_t * route);
+void reset_routes();
 void init_protocol(node_address_t address);
 void rx_handler(message_t * message, UINT8 length);
 void tx_message(node_address_t dst, UINT8 * payload, UINT8 payload_length, BOOL new_route);
