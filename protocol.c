@@ -21,16 +21,20 @@ void set_null_route(route_t * route) {
     route->distance = 0xFF;
 }
 
-void init_protocol(node_address_t address) {
+void reset_routes() {
     UINT8 i = 0;
-
-    node_address = address;
 
     do
     {
         set_null_route(&(routes[i++]));
     }
     while (i != 0);
+}
+
+void init_protocol(node_address_t address) {
+    node_address = address;
+
+    reset_routes();
 
     memset(old_msgs_fqids, 0, sizeof (old_msgs_fqids));
 
@@ -50,6 +54,7 @@ void rx_handler(message_t * message, UINT8 length) {
     UINT8 u_src_id;
     UINT16 m_fqid;
     UINT8 i;
+    UINT8 payload_size;
 
     if (message->signature != MESSAGE_SIGNATURE) return;
 
@@ -77,19 +82,17 @@ void rx_handler(message_t * message, UINT8 length) {
 
     if (message->u_dst == node_address)
     {
-        if (message->u_src == 1)
+        payload_size = length - HEADER_SIZE;
+
+        if (payload_size > 0)
         {
-            delay_ms(50);
-            tx_message(message->u_src, (UINT8 *)"Hi", 2, FALSE);
+            delay_ms(50 + get_address());
+            tx_message(message->u_src, 0, 0, FALSE);
         }
 
-        //*
-        // TODO: Handle payload
-        // payload_length = length - HEADER_SIZE;
         LED2 = 1;
         delay_ms(800);
         LED2 = 0;
-        // */
 
         return;
     }
@@ -108,17 +111,19 @@ void rx_handler(message_t * message, UINT8 length) {
     forward_message.hops++;
 
     LED1 = 1;
-    delay_ms(200);
+    delay_ms(200 + get_address());
     LED1 = 0;
 
     radio_tx((UINT8 *)(&forward_message), length);
 }
 
 void tx_message(node_address_t dst, UINT8 * payload, UINT8 payload_length, BOOL new_route) {
-    temp_tx_msg.new_route = new_route;
+    node_address_t router = new_route ? 0 : routes[dst - 1].router;
+
+    temp_tx_msg.new_route = router == 0;
     temp_tx_msg.id++;
     temp_tx_msg.u_dst = dst;
-    temp_tx_msg.dst = routes[dst - 1].router;
+    temp_tx_msg.dst = router;
     memcpy(&(temp_tx_msg.payload), payload, payload_length);
 
     radio_tx((UINT8 *)(&temp_tx_msg), HEADER_SIZE + payload_length);
