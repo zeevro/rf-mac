@@ -118,12 +118,10 @@ void rx_handler(message_t * message, UINT8 length) {
 }
 
 void tx_message(node_address_t dst, UINT8 * payload, UINT8 payload_length, BOOL new_route) {
-    node_address_t router = new_route ? 0 : routes[dst - 1].router;
-
-    temp_tx_msg.new_route = router == 0;
+    temp_tx_msg.new_route = new_route;
     temp_tx_msg.id++;
     temp_tx_msg.u_dst = dst;
-    temp_tx_msg.dst = router;
+    temp_tx_msg.dst = routes[dst - 1].router;
     memcpy(&(temp_tx_msg.payload), payload, payload_length);
 
     radio_tx((UINT8 *)(&temp_tx_msg), HEADER_SIZE + payload_length);
