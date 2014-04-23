@@ -200,14 +200,7 @@ void hal_nrf_set_output_power(hal_nrf_output_power_t power) {
 }
 
 void hal_nrf_set_datarate(hal_nrf_datarate_t datarate) {
-    if (datarate == HAL_NRF_1MBPS)
-    {
-        hal_nrf_write_reg(RF_SETUP, (hal_nrf_read_reg(RF_SETUP) & ~(1 << RF_DR)));
-    }
-    else
-    {
-        hal_nrf_write_reg(RF_SETUP, (hal_nrf_read_reg(RF_SETUP) | (1 << RF_DR)));
-    }
+    hal_nrf_write_reg(RF_SETUP, (hal_nrf_read_reg(RF_SETUP) & ~((1 << RF_DR_LOW) | (1 << RF_DR_HIGH))) | (datarate << RF_DR_HIGH));
 }
 
 UINT8 hal_nrf_get_operation_mode() {
@@ -227,7 +220,7 @@ UINT8 hal_nrf_get_output_power() {
 }
 
 UINT8 hal_nrf_get_datarate() {
-    return (hal_nrf_read_reg(RF_SETUP) & (1 << RF_DR)) >> RF_DR;
+    return (hal_nrf_read_reg(RF_SETUP) & (1 << RF_DR_HIGH)) >> RF_DR_HIGH; # TODO: Fix
 }
 
 BOOL hal_nrf_rx_fifo_empty() {

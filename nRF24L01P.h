@@ -94,8 +94,9 @@ typedef enum {
  *
  */
 typedef enum {
-    HAL_NRF_1MBPS,          /**< Datarate set to 1 Mbps  */
-    HAL_NRF_2MBPS           /**< Datarate set to 2 Mbps  */
+    HAL_NRF_1MBPS,          /**< Datarate set to 1 Mbps   */
+    HAL_NRF_2MBPS,          /**< Datarate set to 2 Mbps   */
+    HAL_NRF_250KBPS = 4     /**< Datarate set to 250 kbps */
 } hal_nrf_datarate_t;
 
 /** An enum describing the radio's PLL mode.
@@ -172,8 +173,9 @@ typedef enum {
 
 /** @name RF_SETUP register bit definitions */
 //@{
+#define RF_DR_LOW     5     /**< RF_SETUP register bit 5 */
 #define PLL_LOCK      4     /**< RF_SETUP register bit 4 */
-#define RF_DR         3     /**< RF_SETUP register bit 3 */
+#define RF_DR_HIGH    3     /**< RF_SETUP register bit 3 */
 #define RF_PWR1       2     /**< RF_SETUP register bit 2 */
 #define RF_PWR0       1     /**< RF_SETUP register bit 1 */
 #define LNA_HCURR     0     /**< RF_SETUP register bit 0 */
