@@ -82,6 +82,7 @@ void init_radio(UINT8 * address) {
     hal_nrf_enable_dynamic_pl();                            // Enable dynamic payload size
     hal_nrf_setup_dyn_pl(1);                                // Enable dynamic payload size on pipe 0
     hal_nrf_set_rf_channel(2);                              // Operating on static channel. Frequency = (2400 + RF_CHANNEL) KHz
+    hal_nrf_set_datarate(HAL_NRF_2MBPS);                    // 2Mbps data rate
     hal_nrf_set_power_mode(HAL_NRF_PWR_UP);                 // Power up device
     delay_us(130);                                          // Wait for the radio to power up
 }
